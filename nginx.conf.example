@@ -1,0 +1,19 @@
+# 将 dist 目录部署到服务器后，用 Nginx 托管并支持 SPA 路由
+# 用法：把此文件复制为 nginx 站点配置（如 /etc/nginx/sites-available/data-platform）
+
+server {
+    listen 80;
+    server_name _;  # 改成你的域名或留空用 IP 访问
+    root /var/www/data-platform/dist;  # 改成你放 dist 的实际路径
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 静态资源可缓存
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
